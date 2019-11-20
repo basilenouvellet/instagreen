@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
@@ -9,9 +10,11 @@ const BASE_URL = "https://www.instagram.com/"
 
 function LandingPage() {
   const [name, setName] = useState("");
+  const history = useHistory();
   
   const onButtonClick = () => {
     console.log("Button clicked! Name is", name);
+    history.push(`/result/${name}`);
   };
   
   const handleNameChange = event => {
