@@ -1,11 +1,12 @@
-from instagram.client import InstagramAPI
+from instagram_api import InstagramAPI
 
 if __name__ == "__main__":
-    access_token = "YOUR_ACCESS_TOKEN"
-    client_secret = "YOUR_CLIENT_SECRET"
+    access_token = "IGQVJVaDhFZA1pCVDNFcWZAYa2QyQWxaS096TjVXQ1piNHNTRkgtQ3NpLWl6RTlaTkVCUmdoUnhxNXRXNTNJbUhBcnFWMTkwX0E0T0RNZA3NmWGZAEUG1haVkxV09STHdSTXRnYnZAHd0Q1MDhjV3MxRWNvdGE1c1lEQndYSWxn"
     
-    api = InstagramAPI(access_token=access_token, client_secret=client_secret)
-    recent_media, next_ = api.user_recent_media(user_id="userid", count=10)
-    
-    for media in recent_media:
-        print(media.caption.text)
+    api = InstagramAPI(access_token)
+
+    fields = api.get_user_fields()
+    medias = api.get_user_medias()
+
+    print("Media count from fields: %d" % fields['media_count'])
+    print("Media count from medias: %d" % len(medias['data']))

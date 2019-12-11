@@ -1,1 +1,3 @@
-**/*/.secrets
+.secrets
+
+/__pycache__
