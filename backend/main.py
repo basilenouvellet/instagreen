@@ -5,8 +5,8 @@ if __name__ == '__main__':
     
     api = Instagram_API(access_token)
 
-    fields = api.get_user_fields()
+    infos = api.get_user_infos()
     medias = api.get_user_medias()
 
-    print('Media count from fields: %d' % fields['media_count'])
+    print('Media count from infos: %d' % infos['media_count'])
     print('Media count from medias: %d' % len(medias['data']))

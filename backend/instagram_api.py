@@ -20,7 +20,7 @@ class Instagram_API():
         except:
             raise 'Something went wrong when doing a GET request on `%s`' % full_url
 
-    def get_user_fields(self):
+    def get_user_infos(self):
         return self.get(
             '/me',
             ['id', 'username', 'media_count'],

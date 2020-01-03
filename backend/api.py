@@ -3,7 +3,7 @@ from flask_cors import CORS
 from instagram_api import Instagram_API
 
 # App
-app = Flask(__name__)
+app = Flask('Instagreen API')
 CORS(app)
 
 # Instagram API
@@ -11,8 +11,14 @@ ACCESS_TOKEN_TO_DELETE = 'IGQVJVSU5GblBqQ05sME1FSjgwNEZAtTnlERENBT1EtaVpkWVUtZAE
 insta_api = Instagram_API(ACCESS_TOKEN_TO_DELETE)
 
 # Routes
-@app.route('/api/id')
-def get_id():
+@app.route('/api/infos')
+def get_infos():
     return {
-        'data': insta_api.get_user_fields(),
+        'data': insta_api.get_user_infos(),
+    }
+
+@app.route('/api/medias')
+def get_medias():
+    return {
+        'data': insta_api.get_user_medias(),
     }
