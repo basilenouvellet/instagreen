@@ -11,7 +11,7 @@ ACCESS_TOKEN_TO_DELETE = 'IGQVJVSU5GblBqQ05sME1FSjgwNEZAtTnlERENBT1EtaVpkWVUtZAE
 insta_api = Instagram_API(ACCESS_TOKEN_TO_DELETE)
 
 # Routes
-@app.route("/api/id")
+@app.route('/api/id')
 def get_id():
     return {
         'data': insta_api.get_user_fields(),

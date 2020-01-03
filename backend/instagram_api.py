@@ -2,7 +2,7 @@ import requests
 
 BASE_URL = 'https://graph.instagram.com'
 
-class InstagramAPI():
+class Instagram_API():
     def __init__(self, access_token):
         self.access_token = access_token
 
