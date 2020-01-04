@@ -48,3 +48,11 @@ def get_medias():
     return {
         'data': insta_api.get_user_medias(),
     }
+
+@app.route('/api/media/<media_id>', methods=['POST'])
+def get_media(media_id):
+    token = request.get_json()['token']
+    insta_api = Instagram_API(token)
+    return {
+        'data': insta_api.get_media(media_id),
+    }

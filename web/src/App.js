@@ -5,9 +5,10 @@ import {
   Route,
 } from "react-router-dom";
 
-import LandingPage from './components/LandingPage';
 import MePage from './components/MePage';
+import MediaPage from './components/MediaPage';
 import ResultPage from './components/ResultPage';
+import LandingPage from './components/LandingPage';
 
 import './App.css';
 
@@ -30,6 +31,10 @@ function App() {
             
             <Route path="/result/:name">
               <ResultPage />
+            </Route>
+
+            <Route path="/media/:mediaId">
+              <MediaPage />
             </Route>
         </Switch>
       </div>

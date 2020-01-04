@@ -35,3 +35,9 @@ class Instagram_API():
             '/me/media',
             ['id', 'media_type'],
             lambda response: response) # TODO: write converter
+    
+    def get_media(self, media_id):
+        return self.get(
+            '/%s' % media_id,
+            ['id', 'media_type', 'caption', 'media_url', 'permalink', 'thumbnail_url', 'timestamp', 'username'],
+            lambda response: response) # TODO: write converter
