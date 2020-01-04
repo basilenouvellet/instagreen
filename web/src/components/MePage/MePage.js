@@ -1,58 +1,97 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import './MePage.css';
 
 const BASE_API_URL = 'http://localhost:5000/api';
 
 function MePage() {
+  const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const [userMedias, setUserMedias] = useState([]);
 
-  // Fetch User ID & User Name
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const code = query.get('code');
+
+  // TODO:
+  // check if User is logged in
+  // useEffect(() => {})
+
+  // Fetch Access Token
+  useEffect(() => {
+    async function fetchAccessTokenAsync() {
+      const res = await fetch(BASE_API_URL + '/auth/access_token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
+      });
+      const resJson = await res.json();
+
+      if (resJson.data) {
+        setToken(resJson.data.token);
+      } else {
+        console.error(resJson.error.message);
+        setToken(null);
+      }
+    }
+
+    if (code) { fetchAccessTokenAsync(); }
+  }, [code]);
+
+  // Fetch User ID, User Name and User Medias
   useEffect(() => {
     async function fetchInfosAsync() {
-      const res = await fetch(BASE_API_URL + '/infos');
+      const res = await fetch(BASE_API_URL + '/infos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
       const resJson = await res.json();
       const { data } = resJson;
       setUserId(data.user_id);
       setUserName(data.username);
     }
-    try {
-      fetchInfosAsync();
-    } catch(e) {
-      console.error('Something happened while fetching User Infos', e);
-    }
-  }, []);
 
-  // Fetch User Medias
-  useEffect(() => {
     async function fetchMediasAsync() {
-      const res = await fetch(BASE_API_URL + '/medias');
+      const res = await fetch(BASE_API_URL + '/medias', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
       const resJson = await res.json();
-      console.log('resJson', resJson);
-      
       const { data } = resJson;
-      setUserMedias(data.data);
+      setUserMedias(data.data || []);
     }
-    try {
-      fetchMediasAsync();
-    } catch(e) {
-      console.error('Something happened while fetching User Medias', e);
+
+    if (token) {
+      try {
+        fetchInfosAsync();
+        fetchMediasAsync();
+      } catch(e) {
+        console.error('Something happened while fetching User Infos & Medias', e);
+      }
     }
-  }, []);
+  }, [token]);
 
   return (
     <div className="MePage">
-      <h5>Results for <b>{userName}</b></h5>
+      <h4>Results for <b>{userName}</b></h4>
 
-      <h8>User ID is <b>{userId}</b></h8>
+      <h6>User ID is <b>{userId}</b></h6>
 
-      <h8>User Medias are {userMedias.map(media => (
-        <div key={media.id}>
+      <h6>User Medias are {userMedias.map(media => (
+        <p key={media.id}>
           <b>{JSON.stringify(media)}</b>
-        </div>
-      ))}</h8>
+        </p>
+      ))}</h6>
     </div>
   );
 }
