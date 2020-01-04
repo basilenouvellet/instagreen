@@ -11,4 +11,4 @@ gnome-terminal                                                                  
         -e "zsh -i -c \"cd backend ; exec zsh\""                                       \
     --tab                                                                              \
         --title="API"                                                                  \
-        -e "zsh -i -c \"cd backend && env FLASK_APP=\"api.py\" flask run ; exec zsh\""
+        -e "zsh -i -c \"cd backend && dev/bin/start ; exec zsh\""

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -Cue -o pipefail
+
+env FLASK_APP="api.py" FLASK_ENV="development" flask run
