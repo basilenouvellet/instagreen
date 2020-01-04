@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 import './MePage.css';
 
 const BASE_API_URL = 'http://localhost:5000/api';
 
 function MePage() {
-  const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const [userMedias, setUserMedias] = useState([]);
+  // const [token, setToken] = useState(null);
+  const [token, setToken] = useLocalStorage('token', null);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -39,8 +41,8 @@ function MePage() {
       }
     }
 
-    if (code) { fetchAccessTokenAsync(); }
-  }, [code]);
+    if (code && !token) { fetchAccessTokenAsync(); }
+  }, [code, token, setToken]);
 
   // Fetch User ID, User Name and User Medias
   useEffect(() => {
@@ -88,9 +90,9 @@ function MePage() {
       <h6>User ID is <b>{userId}</b></h6>
 
       <h6>User Medias are {userMedias.map(media => (
-        <p key={media.id}>
+        <Link to={`/media/${media.id}`} key={media.id}>
           <b>{JSON.stringify(media)}</b>
-        </p>
+        </Link>
       ))}</h6>
     </div>
   );
