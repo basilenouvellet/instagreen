@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -Cue -o pipefail
+
+gnome-terminal                                                                         \
+    --tab                                                                              \
+        --title="Web"                                                                  \
+        -e "zsh -i -c \"cd web && yarn install && yarn start ; exec zsh\""             \
+    --tab                                                                              \
+        --title="Backend"                                                              \
+        -e "zsh -i -c \"cd backend ; exec zsh\""                                       \
+    --tab                                                                              \
+        --title="API"                                                                  \
+        -e "zsh -i -c \"cd backend && env FLASK_APP=\"api.py\" flask run ; exec zsh\""
