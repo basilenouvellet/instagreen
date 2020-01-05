@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
 import useSessionStorage from '../../hooks/useSessionStorage';
 
 import './MePage.css';
@@ -103,13 +104,17 @@ function MePage() {
     <div className="MePage">
       <h4>Results for <b>{userName}</b></h4>
 
-      <h6>User ID is <b>{userId}</b></h6>
+      <h6 style={{ marginTop: '3em' }}>User ID is <b>{userId}</b></h6>
 
-      <h6>User Medias are {userMedias.map(media => (
-        <Link to={`/media/${media.id}`} key={media.id}>
-          <b>{JSON.stringify(media)}</b>
-        </Link>
-      ))}</h6>
+      <h6 style={{ marginTop: '3em' }}>User Medias:</h6>
+
+      <div className="me-page-user-medias-container">
+        {userMedias.map(media => (
+          <Link to={`/media/${media.id}`} key={media.id}>
+            <b>{JSON.stringify(media)}</b>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
+import SimpleJsonRenderer from '../SimpleJsonRenderer';
 import useSessionStorage from '../../hooks/useSessionStorage';
 
 import './MediaPage.css';
@@ -47,7 +49,7 @@ function MediaPage() {
 
   return (
     <div className="MediaPage">
-      {media && <h6>{JSON.stringify(media)}</h6>}
+      {media && <SimpleJsonRenderer json={media} />}
     </div>
   );
 }
