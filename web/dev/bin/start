@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -Cue -o pipefail
+
+yarn install && yarn start

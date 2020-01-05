@@ -2,13 +2,10 @@
 
 set -Cue -o pipefail
 
-gnome-terminal                                                                         \
-    --tab                                                                              \
-        --title="Web"                                                                  \
-        -e "zsh -i -c \"cd web && yarn install && yarn start ; exec zsh\""             \
-    --tab                                                                              \
-        --title="Backend"                                                              \
-        -e "zsh -i -c \"cd backend ; exec zsh\""                                       \
-    --tab                                                                              \
-        --title="API"                                                                  \
+gnome-terminal                                                    \
+    --tab                                                         \
+        --title="Web"                                             \
+        -e "zsh -i -c \"cd web && dev/bin/start ; exec zsh\""     \
+    --tab                                                         \
+        --title="Backend"                                         \
         -e "zsh -i -c \"cd backend && dev/bin/start ; exec zsh\""
