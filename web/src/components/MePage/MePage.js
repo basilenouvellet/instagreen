@@ -23,6 +23,8 @@ function MePage() {
 
   // Fetch Access Token
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function fetchAccessTokenAsync() {
       const res = await fetch(BASE_API_URL + '/auth/access_token', {
         method: 'POST',
@@ -30,6 +32,7 @@ function MePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ code }),
+        signal: abortController.signal,
       });
       const resJson = await res.json();
 
@@ -45,13 +48,23 @@ function MePage() {
       try {
         fetchAccessTokenAsync();
       } catch(e) {
-        console.error('Something happened while fetching Token', e);
+        // check if request was not intentionally aborted
+        if (!abortController.signal.aborted) {
+          console.error('Something happened while fetching Token', e);
+        }
       }
     }
+
+    // clean-up by cancelling potential on-going fetch request
+    return () => {
+      abortController.abort();
+    };
   }, [code, token, setToken]);
 
   // Fetch User ID, User Name and User Medias
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function fetchInfosAsync() {
       const res = await fetch(BASE_API_URL + '/infos', {
         method: 'POST',
@@ -59,6 +72,7 @@ function MePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ token }),
+        signal: abortController.signal,
       });
       const resJson = await res.json();
 
@@ -79,6 +93,7 @@ function MePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ token }),
+        signal: abortController.signal,
       });
       const resJson = await res.json();
 
@@ -95,9 +110,17 @@ function MePage() {
         fetchInfosAsync();
         fetchMediasAsync();
       } catch(e) {
-        console.error('Something happened while fetching User Infos & Medias', e);
+        // check if request was not intentionally aborted
+        if (!abortController.signal.aborted) {
+          console.error('Something happened while fetching User Infos & Medias', e);
+        }
       }
     }
+
+    // clean-up by cancelling potential on-going fetch request
+    return () => {
+      abortController.abort();
+    };
   }, [token]);
 
   return (

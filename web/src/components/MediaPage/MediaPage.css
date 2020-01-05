@@ -1,9 +1,6 @@
 .MediaPage {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 10%;
+  padding: 0 10% 3em 10%;
+  position: relative;
 }

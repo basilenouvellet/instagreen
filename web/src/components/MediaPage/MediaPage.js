@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 import SimpleJsonRenderer from '../SimpleJsonRenderer';
 import useSessionStorage from '../../hooks/useSessionStorage';
@@ -13,6 +14,7 @@ function MediaPage() {
   const [token, setToken] = useSessionStorage('token', null); // eslint-disable-line no-unused-vars
 
   const { mediaId } = useParams();
+  const history = useHistory();
 
   // TODO:
   // check if User is logged in
@@ -20,6 +22,8 @@ function MediaPage() {
 
   // Fetch Media
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function fetchMediaAsync() {
       const res = await fetch(BASE_API_URL + '/media/' + mediaId, {
         method: 'POST',
@@ -27,6 +31,7 @@ function MediaPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ token }),
+        signal: abortController.signal,
       });
       const resJson = await res.json();
 
@@ -42,13 +47,31 @@ function MediaPage() {
       try {
         fetchMediaAsync();
       } catch(e) {
-        console.error('Something happened while fetching Media', e);
+        // check if request was not intentionally aborted
+        if (!abortController.signal.aborted) {
+          console.error('Something happened while fetching Media', e);
+        }
       }
     }
+
+    // clean-up by cancelling potential on-going fetch request
+    return () => {
+      abortController.abort();
+    };
   }, [mediaId, token]);
+
+  const onBackButtonClick = () => { history.goBack(); };
 
   return (
     <div className="MediaPage">
+      <Button
+        variant="outline-secondary"
+        onClick={onBackButtonClick}
+        style={{ marginBottom: '2em' }}
+      >
+        Back
+      </Button>
+
       {media && <SimpleJsonRenderer json={media} />}
     </div>
   );
