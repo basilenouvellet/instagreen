@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import useSessionStorage from '../../hooks/useSessionStorage';
 
 import './MePage.css';
 
@@ -10,8 +10,7 @@ function MePage() {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const [userMedias, setUserMedias] = useState([]);
-  // const [token, setToken] = useState(null);
-  const [token, setToken] = useLocalStorage('token', null);
+  const [token, setToken] = useSessionStorage('token', null);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -36,12 +35,18 @@ function MePage() {
       if (resJson.data) {
         setToken(resJson.data.token);
       } else {
-        console.error(resJson.error.message);
+        console.error(resJson.error.message, resJson.error);
         setToken(null);
       }
     }
 
-    if (code && !token) { fetchAccessTokenAsync(); }
+    if (code && !token) {
+      try {
+        fetchAccessTokenAsync();
+      } catch(e) {
+        console.error('Something happened while fetching Token', e);
+      }
+    }
   }, [code, token, setToken]);
 
   // Fetch User ID, User Name and User Medias
@@ -55,9 +60,15 @@ function MePage() {
         body: JSON.stringify({ token }),
       });
       const resJson = await res.json();
-      const { data } = resJson;
-      setUserId(data.user_id);
-      setUserName(data.username);
+
+      if (resJson.data) {
+        setUserId(resJson.data.user_id);
+        setUserName(resJson.data.username);
+      } else {
+        console.error(resJson.error.message, resJson.error);
+        setUserId(null);
+        setUserName(null);
+      }
     }
 
     async function fetchMediasAsync() {
@@ -69,8 +80,13 @@ function MePage() {
         body: JSON.stringify({ token }),
       });
       const resJson = await res.json();
-      const { data } = resJson;
-      setUserMedias(data.data || []);
+
+      if (resJson.data) {
+        setUserMedias(resJson.data.data);
+      } else {
+        console.error(resJson.error.message, resJson.error);
+        setUserMedias([]);
+      }
     }
 
     if (token) {

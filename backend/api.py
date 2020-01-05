@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from instagram_api import Instagram_API
-from tools.get_access_token import get_oauth_url, get_access_token, extract_code_from_url
+from tools.get_access_token import get_oauth_url, get_access_token
 
 # App
 app = Flask('Instagreen API')
@@ -31,28 +31,34 @@ def post_access_token():
             'error': {
                 'message': err.args[0],
             }
-        }
+        }, 400
 
 @app.route('/api/infos', methods=['POST'])
 def get_infos():
     token = request.get_json()['token']
     insta_api = Instagram_API(token)
-    return {
-        'data': insta_api.get_user_infos(),
-    }
+    try:
+        data = insta_api.get_user_infos()
+        return { 'data': data }
+    except BaseException as err:
+        return { 'error': err.args[0] }, 400
 
 @app.route('/api/medias', methods=['POST'])
 def get_medias():
     token = request.get_json()['token']
     insta_api = Instagram_API(token)
-    return {
-        'data': insta_api.get_user_medias(),
-    }
+    try:
+        data = insta_api.get_user_medias()
+        return { 'data': data }
+    except BaseException as err:
+        return { 'error': err.args[0] }, 400
 
 @app.route('/api/media/<media_id>', methods=['POST'])
 def get_media(media_id):
     token = request.get_json()['token']
     insta_api = Instagram_API(token)
-    return {
-        'data': insta_api.get_media(media_id),
-    }
+    try:
+        data = insta_api.get_media(media_id)
+        return { 'data': data }
+    except BaseException as err:
+        return { 'error': err.args[0] }, 400

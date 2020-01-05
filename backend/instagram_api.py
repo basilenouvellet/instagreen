@@ -14,11 +14,12 @@ class Instagram_API():
             'fields': ','.join(fields),
         })
 
-        try:
-            response = r.json()
-            return converter(response)
-        except:
-            raise 'Something went wrong when doing a GET request on `%s`' % full_url
+        response = r.json()
+
+        if 'error' in response:
+            raise BaseException(response['error'])
+
+        return converter(response)
 
     def get_user_infos(self):
         return self.get(

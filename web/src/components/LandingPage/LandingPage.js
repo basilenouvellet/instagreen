@@ -16,12 +16,20 @@ function LandingPage() {
   const handleAuthAsync = async () => {
     const res = await fetch(BASE_API_URL + '/auth/window_url');
     const resJson = await res.json();
-    const { data } = resJson;
-    window.open(data.url, '_self');
+
+    if(resJson.data) {
+      window.open(resJson.data.url, '_self');
+    } else {
+      console.error(resJson.error.message, resJson.error);
+    }
   };
 
   const onMyProfileButtonClick = () => {
-    handleAuthAsync();
+    try {
+      handleAuthAsync();
+    } catch(e) {
+      console.error('Something happened while fetching Auth Window', e);
+    }
   };
 
   const onButtonClick = () => {

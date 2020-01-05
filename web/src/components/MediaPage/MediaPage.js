@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import useSessionStorage from '../../hooks/useSessionStorage';
 
 import './MediaPage.css';
 
@@ -8,7 +8,7 @@ const BASE_API_URL = 'http://localhost:5000/api';
 
 function MediaPage() {
   const [media, setMedia] = useState(null);
-  const [token, setToken] = useLocalStorage('token', null); // eslint-disable-line no-unused-vars
+  const [token, setToken] = useSessionStorage('token', null); // eslint-disable-line no-unused-vars
 
   const { mediaId } = useParams();
 
@@ -27,8 +27,13 @@ function MediaPage() {
         body: JSON.stringify({ token }),
       });
       const resJson = await res.json();
-      const { data } = resJson;
-      setMedia(data);
+
+      if (resJson.data) {
+        setMedia(resJson.data);
+      } else {
+        console.error(resJson.error.message, resJson.error);
+        setMedia(null);
+      }
     }
 
     if (token) {
