@@ -41,6 +41,8 @@ def get_infos():
         data = insta_api.get_user_infos()
         return { 'data': data }
     except BaseException as err:
+        print('######## ERROR ########')
+        print(err.args[0])
         return { 'error': err.args[0] }, 400
 
 @app.route('/api/medias', methods=['POST'])
@@ -51,6 +53,8 @@ def get_medias():
         data = insta_api.get_user_medias()
         return { 'data': data }
     except BaseException as err:
+        print('######## ERROR ########')
+        print(err.args[0])
         return { 'error': err.args[0] }, 400
 
 @app.route('/api/media/<media_id>', methods=['POST'])
@@ -61,4 +65,6 @@ def get_media(media_id):
         data = insta_api.get_media(media_id)
         return { 'data': data }
     except BaseException as err:
+        print('######## ERROR ########')
+        print(err.args[0])
         return { 'error': err.args[0] }, 400

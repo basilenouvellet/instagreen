@@ -6,7 +6,7 @@ class Instagram_API():
     def __init__(self, access_token):
         self.access_token = access_token
 
-    def get(self, endpoint, fields, converter):
+    def _get(self, endpoint, fields, converter):
         full_url = BASE_URL + endpoint
 
         r = requests.get(full_url, params={
@@ -22,7 +22,7 @@ class Instagram_API():
         return converter(response)
 
     def get_user_infos(self):
-        return self.get(
+        return self._get(
             '/me',
             ['id', 'username', 'media_count'],
             lambda response: {
@@ -32,13 +32,13 @@ class Instagram_API():
             })
 
     def get_user_medias(self):
-        return self.get(
+        return self._get(
             '/me/media',
             ['id', 'media_type'],
             lambda response: response) # TODO: write converter
     
     def get_media(self, media_id):
-        return self.get(
+        return self._get(
             '/%s' % media_id,
             ['id', 'media_type', 'caption', 'media_url', 'permalink', 'thumbnail_url', 'timestamp', 'username'],
             lambda response: response) # TODO: write converter
